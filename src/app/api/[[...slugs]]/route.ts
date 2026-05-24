@@ -52,14 +52,25 @@ const messages = new Elysia({ prefix: "/messages" })
       }),
     },
   )
-  .get("/", async ({ auth }) => {
-    const messages = await redis.lrange<Message>(
-      `messages:${auth.roomId}`,
-      0,
-      -1,
-    );
-    return { messages };
-  });
+  .get(
+    "/",
+    async ({ auth }) => {
+      const messages = await redis.lrange<Message>(
+        `messages:${auth.roomId}`,
+        0,
+        -1,
+      );
+      return {
+        messages: messages.map((message) => ({
+          ...message,
+          token: message.token === auth.token ? auth.token : undefined,
+        })),
+      };
+    },
+    {
+      query: z.object({ roomId: z.string() }),
+    },
+  );
 
 const app = new Elysia({ prefix: "/api" }).use(rooms).use(messages);
 
