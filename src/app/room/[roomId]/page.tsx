@@ -5,6 +5,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { client } from "@/lib/client";
 import { useUsername } from "@/hooks/use-username";
 import { format } from "date-fns";
+import { useRealtime } from "@/lib/realtime-client";
 
 function formatTimeRemaining(seconds: number): string {
   const mins = Math.floor(seconds / 60);
@@ -21,7 +22,7 @@ const RoomPage = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const { username } = useUsername();
 
-  const { data: messages } = useQuery({
+  const { data: messages, refetch } = useQuery({
     queryKey: ["messages", roomId],
     queryFn: async () => {
       const res = await client.messages.get({ query: { roomId } });
@@ -35,6 +36,16 @@ const RoomPage = () => {
         { sender: username, text },
         { query: { roomId } },
       );
+    },
+  });
+
+  useRealtime({
+    channels: [roomId],
+    events: ["chat.message", "chat.destroy"],
+    onData: ({ event }) => {
+      if (event === "chat.message") {
+        refetch();
+      }
     },
   });
 
