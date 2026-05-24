@@ -75,6 +75,10 @@ src/
 └── types/                   # TypeScript definitions
 ```
 
+## 🎓 Credits
+
+This project was built following the tutorial: **[Build a Complete Real-Time Chat with Next.js 16, Redis, Tailwind (2025)](https://www.youtube.com/watch?v=D8CLV-MRH0k)**.
+
 ## 📄 License
 
 This project is licensed under the MIT License.
