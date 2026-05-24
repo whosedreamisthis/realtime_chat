@@ -18,12 +18,13 @@ const Messages = ({
           </p>
         </div>
       )}
-
-      {messages?.map((msg) => (
-        <div key={msg.id} className="flex flex-col items-start">
-          <div className="max-w-[80%] group">
-            <div className="flex justify-end w-full">
-              <div className="flex items-baseline gap-3 mb-1">
+      <div className="p-4">
+        <div className="flex flex-col gap-3">
+          {messages?.map((msg) => (
+            <div key={msg.id} className="flex flex-col ">
+              <div
+                className={`flex w-full gap-3 ${msg.sender === username ? "justify-start" : "justify-end"} `}
+              >
                 <span
                   className={`text-xs font-bold ${msg.sender === username ? "text-green-500" : "text-blue-500"}`}
                 >
@@ -33,13 +34,17 @@ const Messages = ({
                   {format(msg.timestamp, "HH:mm")}
                 </span>
               </div>
-              <p className="text-sm text-zinc-300 leading-relaxed break-all">
-                {msg.text}
-              </p>
+              <div
+                className={`flex ${msg.sender === username ? "justify-start" : "justify-end"}`}
+              >
+                <p className="text-sm text-zinc-300 leading-relaxed ">
+                  {msg.text}
+                </p>
+              </div>
             </div>
-          </div>
+          ))}
         </div>
-      ))}
+      </div>
     </div>
   );
 };
