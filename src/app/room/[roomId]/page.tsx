@@ -87,7 +87,7 @@ const RoomPage = () => {
     },
   });
 
-  const { mutate: destroyRoom } = useMutation({
+  const { mutate: destroyRoom, isPending: isDeletePending } = useMutation({
     mutationFn: async () => {
       await client.room.delete(null, { query: { roomId } });
     },
@@ -131,7 +131,8 @@ const RoomPage = () => {
           </div>
         </div>
         <button
-          className="text-xs bg-zinc-800 hover:bg-red-600 px-3 py-1.5 rounded text-zinc-400 hover:text-white font-bold transition-all group flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="text-xs bg-zinc-800 hover:bg-red-600 px-3 py-1.5 rounded text-zinc-400 hover:text-white font-bold transition-all group flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+          disabled={isDeletePending}
           onClick={() => {
             destroyRoom();
           }}
