@@ -1,4 +1,5 @@
 import { Elysia, t } from "elysia";
+import { cors } from "@elysiajs/cors"; // 1. Import the plugin
 import { redis } from "@/lib/redis";
 import { nanoid } from "nanoid";
 import { authMiddleware } from "@/app/api/[[...slugs]]/auth";
@@ -102,7 +103,20 @@ const messages = new Elysia({ prefix: "/messages" })
     },
   );
 
-const app = new Elysia({ prefix: "/api" }).use(rooms).use(messages);
+const app = new Elysia({ prefix: "/api" })
+  .use(
+    cors({
+      origin: [
+        "https://whosedreamisthis-realtime-chat.vercel.app",
+        /\.vercel\.app$/, // Dynamically allows preview environments
+      ],
+      methods: ["GET", "POST", "DELETE", "OPTIONS"],
+      allowedHeaders: ["Content-Type", "Authorization"],
+      credentials: true,
+    }),
+  )
+  .use(rooms)
+  .use(messages);
 
 export const GET = (req: Request) => app.handle(req);
 export const POST = (req: Request) => app.handle(req);
