@@ -1,0 +1,64 @@
+"use client";
+import React, { useState } from "react";
+import { useParams } from "next/navigation";
+
+function formatTimeRemaining(seconds: number): string {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+}
+
+const RoomPage = () => {
+  const params = useParams();
+  const roomId = params.roomId as string;
+  const [copyStatus, setCopyStatus] = useState("COPY");
+  const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
+
+  const copyLink = () => {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url);
+    setCopyStatus("COPIED");
+    setTimeout(() => setCopyStatus("COPY"), 2000);
+  };
+
+  return (
+    <main className="flex flex-col h-screen max-h-screen overflow-hidden">
+      <header className="border-b border-zinc-800 p-4 flex items-center justify-between bg-zinc-900/30">
+        <div className="flex items-center gap-4">
+          <div className="flex flex-col">
+            <span className="text-xs text-zinc-500 uppercase">Room Id</span>
+            <div className="flex items-center gap-2">
+              <span className="text-green-500 font-bold">{roomId}</span>
+              <button
+                className="text-[10px] bg-zinc-800 hover:bg-zinc-700 px-2 py-0.5 rounded text-zinc-400 hover:text-zinc-200 transition-colors"
+                onClick={copyLink}
+              >
+                {copyStatus}
+              </button>
+            </div>
+          </div>
+          <div className="h-8 w-px bg-zinc-800" />
+          <div className="flex flex-col">
+            <span className="text-xs text-zinc-500 uppercase">
+              Self-Destruct
+            </span>
+            <span
+              className={`text-sm font-bold flex items-center gap-2 ${timeRemaining !== null && timeRemaining < 60 ? "text-red-500" : "text-amber-500"}`}
+            >
+              {timeRemaining !== null
+                ? formatTimeRemaining(timeRemaining)
+                : "--:--"}
+            </span>
+          </div>
+        </div>
+        <button className="text-xs bg-zinc-800 hover:bg-red-600 px-3 py-1.5 rounded text-zinc-400 hover:text-white font-bold transition-all group flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+          <span className="group-hover:animate-pulse">💣</span>
+          DESTROY NOW
+        </button>
+      </header>
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin"></div>
+    </main>
+  );
+};
+
+export default RoomPage;
