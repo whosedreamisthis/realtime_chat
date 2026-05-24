@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 💬 Private Chat
 
-## Getting Started
+A secure, private, self-destructing chat room application built with **Next.js 16**, **Elysia**, and **Upstash**. Messages are delivered in real-time and rooms automatically expire after a set duration.
 
-First, run the development server:
+## ✨ Features
+
+- **🔒 Secure Room Creation**: Generate unique, private chat rooms with nanoid.
+- **⚡ Real-time Messaging**: Instant message delivery powered by [Upstash Realtime](https://upstash.com/docs/realtime).
+- **⏳ Self-Destructing Rooms**: Rooms and all associated data automatically expire after 10 minutes (configurable).
+- **💣 Manual Destruction**: Instantly destroy a room and its history with a single click.
+- **📜 Message History**: Persistent history for the duration of the room's life.
+- **🔗 Easy Sharing**: Quick-copy room links to invite participants.
+
+## 🛠️ Tech Stack
+
+- **Framework**: [Next.js 16](https://nextjs.org) (App Router, React 19)
+- **API Engine**: [Elysia](https://elysiajs.com/) (running on Next.js API routes)
+- **Real-time**: [@upstash/realtime](https://upstash.com/docs/realtime)
+- **Database/Cache**: [Upstash Redis](https://upstash.com/docs/redis)
+- **State Management**: [TanStack Query v5](https://tanstack.com/query)
+- **Validation**: [Zod](https://zod.dev/)
+- **Styling**: [Tailwind CSS 4](https://tailwindcss.com/)
+
+## 🚀 Getting Started
+
+### 1. Prerequisites
+
+- An [Upstash](https://upstash.com/) account (Redis and Realtime).
+
+### 2. Environment Setup
+
+Create a `.env.local` file in the root directory:
+
+```bash
+UPSTASH_REDIS_REST_URL=your_redis_rest_url
+UPSTASH_REDIS_REST_TOKEN=your_redis_token
+UPSTASH_REALTIME_TOKEN=your_realtime_token
+```
+
+### 3. Installation
+
+```bash
+npm install
+```
+
+### 4. Development
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📡 API Endpoints (Elysia)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/room/create` | `POST` | Create a new chat room |
+| `/api/room/ttl` | `GET` | Get room time-to-live |
+| `/api/room` | `DELETE` | Destroy a room |
+| `/api/messages` | `POST` | Send a message |
+| `/api/messages` | `GET` | Get all messages in a room |
 
-## Learn More
+## 📂 Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```text
+src/
+├── app/
+│   ├── api/[[...slugs]]/    # Elysia API routes implementation
+│   ├── room/[roomId]/       # Dynamic chat room route
+│   └── page.tsx             # Application landing page
+├── components/              # Shared UI components
+├── hooks/                   # Custom React hooks (use-username, etc.)
+├── lib/                     # Client initializations (Redis, Realtime)
+└── types/                   # TypeScript definitions
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📄 License
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is licensed under the MIT License.
