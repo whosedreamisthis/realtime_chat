@@ -4,8 +4,8 @@ import { useParams } from "next/navigation";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { client } from "@/lib/client";
 import { useUsername } from "@/hooks/use-username";
-import { format } from "date-fns";
 import { useRealtime } from "@/lib/realtime-client";
+import Messages from "@/components/messages";
 
 function formatTimeRemaining(seconds: number): string {
   const mins = Math.floor(seconds / 60);
@@ -91,33 +91,19 @@ const RoomPage = () => {
           DESTROY NOW
         </button>
       </header>
-      {messages?.messages.length === 0 && (
-        <div className="flex items-center justify-center h-full">
-          <p className="text-zinc-600 text-sm font-mon">
-            No messages yet, start the conversation.
-          </p>
-        </div>
-      )}
-
-      {messages?.messages.map((msg) => (
-        <div key={msg.id} className="flex flex-col items-start">
-          <div className="max-w-[80%] group">
-            <div className="flex items-baseline gap-3 mb-1">
-              <span
-                className={`text-xs font-bold ${msg.sender === username ? "text-green-500" : "text-blue-500"}`}
-              >
-                {msg.sender === username ? "YOU" : msg.sender}
-              </span>
-              <span className="text-[10px] text-zinc-600">
-                {format(msg.timestamp, "HH:mm")}
-              </span>
-            </div>
-            <p className="text-sm text-zinc-300 leading-relaxed break-all">
-              {msg.text}
-            </p>
-          </div>
-        </div>
-      ))}
+      <Messages
+        messages={
+          messages?.messages?.map((msg) => ({
+            id: msg.id,
+            sender: msg.sender,
+            text: msg.text,
+            timestamp: msg.timestamp,
+            roomId: msg.roomId,
+            token: msg.token ?? undefined, // normalizes the string | undefined mismatch
+          })) ?? []
+        }
+        username={username}
+      />
       <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin"></div>
       <div className="p-4 border-t border-zinc-800 bg-zinc-900/30">
         <div className="flex gap-4">
