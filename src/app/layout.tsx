@@ -19,7 +19,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${jetbrainsMono.variable}  h-full antialiased`}>
+    <html
+      lang="en"
+      className={`${jetbrainsMono.variable}  h-full antialiased dark`}
+    >
       <body className={`min-h-full flex flex-col ${jetbrainsMono.className}`}>
         <Providers>{children}</Providers>
       </body>
